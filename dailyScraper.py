@@ -101,7 +101,7 @@ def scrapeDailyNews():
 	soup = BeautifulSoup(content, "lxml")
 	tbl = soup.find("table", {"class": "yfnc_datamodoutline1"}).findNext('table').find_all('tr')[1].find_all('td')
 	
-	newsDate = datetime.strptime(tbl[0].string, "%b %d, %Y")
+	newsDate = datetime.now()
 
 	mydata = quandl.get("AOS/AAPL")
 
