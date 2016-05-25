@@ -22,6 +22,9 @@ class Stock(Object):
 class Option(Object):
 	pass
 
+class News(Object):
+	pass
+
 currDate = datetime.now()
 
 def scrapeDailyStock():
@@ -56,8 +59,6 @@ scrapeDailyStock()
 
 quandl.ApiConfig.api_key = "x3osWz9xu1WqjpWVaziX"
 
-mydata = quandl.get("VOL/AAPL")
-
 def scrapeDailyOptions():
 	url = "http://finance.yahoo.com/q/hp?s=AAPL+Historical+Prices"
 
@@ -66,6 +67,8 @@ def scrapeDailyOptions():
 	tbl = soup.find("table", {"class": "yfnc_datamodoutline1"}).findNext('table').find_all('tr')[1].find_all('td')
 	
 	optionDate = datetime.strptime(tbl[0].string, "%b %d, %Y")
+
+	mydata = quandl.get("VOL/AAPL")
 
 	row = mydata.iloc[-1:]
 	ivmean10 = float(row['IvMean10'])
@@ -88,5 +91,39 @@ def scrapeDailyOptions():
 		print("Option data has already been saved.")
 
 scrapeDailyOptions()
+
+
+
+def scrapeDailyNews():
+	url = "http://finance.yahoo.com/q/hp?s=AAPL+Historical+Prices"
+
+	content = urllib2.urlopen(url).read()
+	soup = BeautifulSoup(content, "lxml")
+	tbl = soup.find("table", {"class": "yfnc_datamodoutline1"}).findNext('table').find_all('tr')[1].find_all('td')
+	
+	newsDate = datetime.strptime(tbl[0].string, "%b %d, %Y")
+
+	mydata = quandl.get("AOS/AAPL")
+
+	row = mydata.iloc[-1:]
+	avgSent = float(row['Article Sentiment'])
+	impactScore = float(row['Impact Score'])
+
+	news = News(
+		date = newsDate,
+		avgSent = avgSent,
+		impactScore = impactScore)
+
+	try:
+		news.save()
+		print("Saved news object ({})".format(news.objectId))
+	except:
+		print("News data has already been saved.")
+
+scrapeDailyNews()
+
+
+
+
 
 

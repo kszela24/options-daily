@@ -11,31 +11,25 @@ PARSE_CLIENT_KEY="0r1owyGri3p7uyo7UX5kivlkhJshtH169KWHGLqk"
 
 register(PARSE_APP_ID, PARSE_CLIENT_KEY, master_key="8dHrxPljlhjB2QJuV0YGrY5tUh7MptdDYnJ3sg6a")
 
-class Option(Object):
+class News(Object):
 	pass
 
 quandl.ApiConfig.api_key = "x3osWz9xu1WqjpWVaziX"
 
-mydata = quandl.get("VOL/AAPL")
+mydata = quandl.get("AOS/AAPL")
 
 for i, row in enumerate(mydata.iterrows()):
-	if i > 3270:
-		optionDate = row[0].to_datetime()
-		ivmean10 = float(row[1][18])
-		ivmean20 = float(row[1][22])
-		ivmean30 = float(row[1][26])
-		ivmean60 = float(row[1][30])
-		print optionDate
-		print ivmean10
-		print ivmean20
-		print ivmean30
-		print ivmean60
+	if i > 1098:
+		newsDate = row[0].to_datetime()
+		avgSent = float(row[1][0])
+		impactScore = float(row[1][1])
+		print avgSent
+		print impactScore
 		
-		option = Option(
-			date = optionDate,
-			ivMean10 = ivmean10,
-			ivMean20 = ivmean10,
-			ivMean30 = ivmean30,
-			ivMean60 = ivmean60)
+		news = News(
+			date = newsDate,
+			avgSent = avgSent,
+			impactScore = impactScore)
 
-		option.save()
+		news.save()
+#print content
